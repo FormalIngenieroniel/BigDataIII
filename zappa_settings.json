@@ -12,7 +12,7 @@
         "profile_name": "default",
         "project_name": "bigdataiii",
         "runtime": "python3.10",
-        "s3_bucket": "zappa-ubo1t55rz"
+        "s3_bucket": "zappa-ubo1t55rz",
         "keep_warm": false,
         "apigateway_enabled": false,
         "manage_roles": false,
@@ -21,7 +21,7 @@
         "events": [
             {
                 "function": "app.f",
-                "expression": "cron(0 0 * * * ? *)" 
+                "expression": "cron(0/5 * * * ? *)" 
             }
         ]
     }
