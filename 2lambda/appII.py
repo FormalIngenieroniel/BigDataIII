@@ -28,22 +28,36 @@ def fII(event, context):
             # Extraer información requerida
             headlines = []
             for article in soup.find_all('article'):
-                categoria = article.find(class_='category-class').get_text(strip=True) if article.find(class_='category-class') else "Sin categoría"
-                titular = article.find('h2').get_text(strip=True) if article.find('h2') else "Sin titular"
-                enlace = article.find('a')['href'] if article.find('a') else "Sin enlace"
-                headlines.append([categoria, titular, enlace])
+                try:
+                    # Extraer categoría con seguridad
+                    categoria = article.find(class_='category-class').get_text(strip=True) if article.find(class_='category-class') else "Sin categoría"
+                    
+                    # Extraer titular con seguridad
+                    titular = article.find('h2').get_text(strip=True) if article.find('h2') else "Sin titular"
+                    
+                    # Extraer enlace con seguridad, validando que el atributo 'href' exista
+                    enlace = article.find('a')['href'] if article.find('a') and 'href' in article.find('a').attrs else "Sin enlace"
+                    
+                    # Agregar a la lista de titulares
+                    headlines.append([categoria, titular, enlace])
+
+                except Exception as e:
+                    print(f"Error procesando artículo: {e}")
+                    continue  # Continuar con el siguiente artículo si ocurre un error
 
             # Generar la ruta de destino en S3
             now = datetime.now()
             
             # Extraer el nombre del periódico de forma más robusta
             # Se considera que el archivo tiene un formato consistente, como "tiempo-raw.html" o "espectador-raw.html"
-            nombre_periodico = key.split('/')[-1].split('-')[0].lower()  # Convertir a minúsculas para uniformidad
+            posibles_periodicos = ['tiempo', 'espectador']
+            nombre_periodico = next((p for p in posibles_periodicos if p in key.lower()), 'desconocido')
             
             # Validar si el nombre del periódico es válido
             if nombre_periodico not in ['tiempo', 'espectador']:
                 nombre_periodico = 'desconocido'  # Manejo de casos inesperados
             
+            # Generar el nombre del archivo en S3
             s3_key = f"headlines/final/periodico={nombre_periodico}/year={now.year}/month={now.month:02}/day={now.day:02}/headlines.csv"
             
             # Escribir resultados a un archivo CSV
