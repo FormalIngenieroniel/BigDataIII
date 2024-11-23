@@ -21,7 +21,7 @@
         "events": [
             {
                 "function": "app.f",
-                "expression": "cron(0/1 * * * ? *)" 
+                "expression": "cron(0 0 * * * ? *)" 
             }
         ]
     }
