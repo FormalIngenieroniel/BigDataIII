@@ -25,7 +25,7 @@ def fII(event, context):
             with open(local_file, 'r', encoding='utf-8') as file:
                 soup = BeautifulSoup(file, 'html.parser')
 
-            # Extraer información requerida (personaliza estas selecciones según el HTML)
+            # Extraer información requerida
             headlines = []
             for article in soup.find_all('article'):
                 categoria = article.find(class_='category-class').get_text(strip=True) if article.find(class_='category-class') else "Sin categoría"
@@ -35,7 +35,15 @@ def fII(event, context):
 
             # Generar la ruta de destino en S3
             now = datetime.now()
-            nombre_periodico = key.split('/')[-1].split('-')[0]  # Extraer "tiempo" o "espectador" del nombre del archivo
+            
+            # Extraer el nombre del periódico de forma más robusta
+            # Se considera que el archivo tiene un formato consistente, como "tiempo-raw.html" o "espectador-raw.html"
+            nombre_periodico = key.split('/')[-1].split('-')[0].lower()  # Convertir a minúsculas para uniformidad
+            
+            # Validar si el nombre del periódico es válido
+            if nombre_periodico not in ['tiempo', 'espectador']:
+                nombre_periodico = 'desconocido'  # Manejo de casos inesperados
+            
             s3_key = f"headlines/final/periodico={nombre_periodico}/year={now.year}/month={now.month:02}/day={now.day:02}/headlines.csv"
             
             # Escribir resultados a un archivo CSV
