@@ -1,0 +1,47 @@
+{
+    "dev": {
+        "app_function": "appII.fII",
+        "aws_region": "us-east-1",
+        "exclude": [
+            "boto3",
+            "dateutil",
+            "botocore",
+            "s3transfer",
+            "concurrent"
+        ],
+        "profile_name": "default",
+        "project_name": "2lambda",
+        "runtime": "python3.10",
+        "s3_bucket": "zappa-e0o8ybfnd",
+        
+        "keep_warm": false,
+        "role_name": "LabRole",
+        "manage_roles": false,
+        "apigateway_enabled": false,
+        "events": [
+            {
+                "function": "appII.fII",
+                "event_source": {
+                    "arn": "arn:aws:s3:::headlinesdyn",
+                    "events": [
+                        "s3:ObjectCreated:*"
+                    ],
+                    "filter": {
+                        "key": {
+                            "filter_rules": [
+                                {
+                                    "name": "prefix",
+                                    "value": "headlines/raw/"
+                                },
+                                {
+                                    "name": "suffix",
+                                    "value": ".html"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}
