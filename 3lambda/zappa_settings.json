@@ -1,0 +1,20 @@
+{
+    "dev": {
+        "app_function": "appIII.fIII",
+        "aws_region": "us-east-1",
+        "profile_name": "default",
+        
+        "project_name": "lambda3project",
+        
+        "runtime": "python3.10",
+        "s3_bucket": "zappa-bls68hpfj",
+        
+        "timeout_seconds": 300,
+        "memory_size": 256,
+        "manage_roles": false,
+        "role_name": "LabRole",
+        "environment_variables": {
+            "CRAWLER_NAME": "crawlers3pt3"
+        }
+    }
+}
