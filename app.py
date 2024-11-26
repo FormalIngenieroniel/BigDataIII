@@ -5,7 +5,7 @@ import datetime
 # URL de las páginas
 URLs = [
     {"url": "https://www.eltiempo.com/", "nombre": "tiempo"},
-    {"url": "https://www.elespectador.com/", "nombre": "espectador"}  # Aquí puedes usar el URL de El Espectador
+    {"url": "https://www.publimetro.co/", "nombre": "publimetro"}  # Aquí puedes usar el URL de El Espectador
 ]
 
 # Cliente de S3
