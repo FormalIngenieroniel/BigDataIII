@@ -30,7 +30,7 @@ def fII(event, context):
             for article in soup.find_all('article'):
                 try:
                     # Extraer categoría con seguridad
-                    categoria = article.find(class_='category-class').get_text(strip=True) if article.find(class_='category-class') else "Sin categoría"
+                    categoria = article.find(class_='category').get_text(strip=True) if article.find(class_='category') else "Sin categoría"
                     
                     # Extraer titular con seguridad
                     titular = article.find('h2').get_text(strip=True) if article.find('h2') else "Sin titular"
