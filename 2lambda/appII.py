@@ -50,11 +50,11 @@ def fII(event, context):
             
             # Extraer el nombre del periódico de forma más robusta
             # Se considera que el archivo tiene un formato consistente, como "tiempo-raw.html" o "espectador-raw.html"
-            posibles_periodicos = ['tiempo', 'espectador']
+            posibles_periodicos = ['tiempo', 'publimetro']
             nombre_periodico = next((p for p in posibles_periodicos if p in key.lower()), 'desconocido')
             
             # Validar si el nombre del periódico es válido
-            if nombre_periodico not in ['tiempo', 'espectador']:
+            if nombre_periodico not in ['tiempo', 'publimetro']:
                 nombre_periodico = 'desconocido'  # Manejo de casos inesperados
             
             # Generar el nombre del archivo en S3
