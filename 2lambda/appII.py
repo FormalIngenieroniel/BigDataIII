@@ -1,6 +1,5 @@
 import boto3
 import csv
-import os
 from datetime import datetime
 from bs4 import BeautifulSoup
 
@@ -29,13 +28,29 @@ def fII(event, context):
             headlines = []
             for article in soup.find_all('article'):
                 try:
-                    # Extraer categoría con seguridad
-                    categoria = article.find(class_='category').get_text(strip=True) if article.find(class_='category') else "Sin categoría"
+                    # Extraer categoría con múltiples clases posibles
+                    clases_categoria = ['c-overline', 'data-subseccion']
+                    categoria = None
+                    for clase in clases_categoria:
+                        elemento_categoria = article.find(class_=clase)
+                        if elemento_categoria:
+                            categoria = elemento_categoria.get_text(strip=True)
+                            break
+                    if not categoria:
+                        categoria = "Sin categoría"
                     
-                    # Extraer titular con seguridad
-                    titular = article.find('h2').get_text(strip=True) if article.find('h2') else "Sin titular"
+                    # Extraer titular con múltiples etiquetas posibles
+                    etiquetas_titular = ['h2', 'h3']
+                    titular = None
+                    for etiqueta in etiquetas_titular:
+                        elemento_titular = article.find(etiqueta)
+                        if elemento_titular:
+                            titular = elemento_titular.get_text(strip=True)
+                            break
+                    if not titular:
+                        titular = "Sin titular"
                     
-                    # Extraer enlace con seguridad, validando que el atributo 'href' exista
+                    # Extraer enlace con seguridad
                     enlace = article.find('a')['href'] if article.find('a') and 'href' in article.find('a').attrs else "Sin enlace"
                     
                     # Agregar a la lista de titulares
@@ -49,12 +64,10 @@ def fII(event, context):
             now = datetime.now()
             
             # Extraer el nombre del periódico de forma más robusta
-            # Se considera que el archivo tiene un formato consistente, como "tiempo-raw.html" o "espectador-raw.html"
             posibles_periodicos = ['tiempo', 'publimetro']
             nombre_periodico = next((p for p in posibles_periodicos if p in key.lower()), 'desconocido')
             
-            # Validar si el nombre del periódico es válido
-            if nombre_periodico not in ['tiempo', 'publimetro']:
+            if nombre_periodico not in posibles_periodicos:
                 nombre_periodico = 'desconocido'  # Manejo de casos inesperados
             
             # Generar el nombre del archivo en S3
