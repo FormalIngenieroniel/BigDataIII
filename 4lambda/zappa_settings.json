@@ -1,0 +1,59 @@
+{
+    "dev": {
+        "app_function": "appIV.fIV",
+        "aws_region": "us-east-1",
+        "exclude": [
+            "boto3",
+            "dateutil",
+            "botocore",
+            "s3transfer",
+            "concurrent"
+        ],
+        "profile_name": "default",
+        "project_name": "4lambda",
+        "runtime": "python3.10",
+        "s3_bucket": "zappa-mq7qa4128"
+        "keep_warm": false,
+        "apigateway_enabled": false,
+        "manage_roles": false,
+        "role_name": "LabRole",
+        "environment_variables": {
+            "S3_BUCKET": "headlinesdyn",
+            "EMR_ROLE": "EMR_EC2_DefaultRole",
+            "EMR_SERVICE_ROLE": "EMR_DefaultRole"
+        },
+        "policy": {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Action": [
+                        "s3:GetObject",
+                        "s3:PutObject",
+                        "s3:ListBucket"
+                    ],
+                    "Resource": [
+                        "arn:aws:s3:::headlinesdyn",
+                        "arn:aws:s3:::headlinesdyn/*"
+                    ]
+                },
+                {
+                    "Effect": "Allow",
+                    "Action": [
+                        "elasticmapreduce:*",
+                        "logs:*",
+                        "cloudwatch:*",
+                        "ec2:*"
+                    ],
+                    "Resource": "*"
+                }
+            ]
+        },
+        "events": [
+            {
+                "function": "appIV.fIV",  # Ruta correcta a la función Lambda
+                "expression": "cron(0 2 * * ? *)"  # Ejecución diaria a las 2 AM UTC
+            }
+        ]
+    }
+}
